@@ -4,7 +4,7 @@ import { API_URL } from '../constants';
 /**
  * Client Table Row Component
  */
-const ClientRow = ({ client, onView, onDelete }) => {
+const ClientRow = ({ client, onView, onEdit, onDelete }) => {
     const [isDeleting, setIsDeleting] = useState(false);
 
     const handleDelete = async () => {
@@ -45,6 +45,13 @@ const ClientRow = ({ client, onView, onDelete }) => {
                     title="View Details"
                 >
                     <i className="fas fa-eye"></i> View
+                </button>
+                <button 
+                    onClick={() => onEdit(client)} 
+                    className="text-green-600 hover:text-green-900 mr-3" 
+                    title="Edit Client"
+                >
+                    <i className="fas fa-edit"></i> Edit
                 </button>
                 <button 
                     onClick={handleDelete} 

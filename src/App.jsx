@@ -3,7 +3,7 @@ import Header from './components/Header.jsx';
 import LoadingSpinner from './components/LoadingSpinner.jsx';
 import ErrorMessage from './components/ErrorMessage.jsx';
 import ClientRow from './components/ClientRow.jsx';
-import AddClientModal from './components/AddClientModal.jsx';
+import AddEditClientModal from './components/AddEditClientModal.jsx';
 import ViewClientModal from './components/ViewClientModal.jsx';
 import { API_URL } from './constants.js';
 
@@ -13,6 +13,8 @@ export default function App() {
   const [error, setError] = useState(null);
   const [selectedClient, setSelectedClient] = useState(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [editingClient, setEditingClient] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const fetchClients = useCallback(async () => {
     setIsLoading(true);
@@ -50,6 +52,36 @@ export default function App() {
     setClients((prev) => [newClient, ...prev]);
   };
 
+  // Handle opening the edit modal with pre-populated data
+  const handleEditClient = (client) => {
+    setEditingClient(client);
+  };
+
+  // Handle updating an existing client (called from modal)
+  const handleUpdateClient = (updatedClient) => {
+    setClients((prev) =>
+      prev.map((client) =>
+        client.id === updatedClient.id ? updatedClient : client
+      )
+    );
+    setEditingClient(null); // Close edit modal
+  };
+
+  // Close edit modal without saving
+  const handleCloseEditModal = () => {
+    setEditingClient(null);
+  };
+
+  // Filter clients based on search query
+  const filteredClients = clients.filter((client) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      client.name.toLowerCase().includes(query) ||
+      client.email.toLowerCase().includes(query) ||
+      client.company.name.toLowerCase().includes(query)
+    );
+  });
+
   let tableContent;
   if (isLoading) {
     tableContent = <LoadingSpinner />;
@@ -69,19 +101,20 @@ export default function App() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {clients.length > 0 ? (
-              clients.map((client) => (
+            {filteredClients.length > 0 ? (
+              filteredClients.map((client) => (
                 <ClientRow
                   key={client.id}
                   client={client}
                   onView={handleViewClient}
+                  onEdit={handleEditClient}
                   onDelete={handleDeleteClient}
                 />
               ))
             ) : (
               <tr>
                 <td colSpan="5" className="py-6 text-center text-gray-500">
-                  No clients found.
+                  {searchQuery ? 'No clients match your search.' : 'No clients found.'}
                 </td>
               </tr>
             )}
@@ -111,17 +144,52 @@ export default function App() {
           </button>
         </div>
 
+        {/* Search Bar */}
+        <div className="mb-6">
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i className="fas fa-search text-gray-400"></i>
+            </div>
+            <input
+              type="text"
+              placeholder="Search by name, email, or company..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+              >
+                <i className="fas fa-times"></i>
+              </button>
+            )}
+          </div>
+        </div>
+
         <div className="bg-white shadow-xl rounded-lg overflow-hidden">
           {tableContent}
         </div>
       </main>
 
-      <AddClientModal
+      {/* Add Client Modal */}
+      <AddEditClientModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         onSave={handleSaveClient}
+        clientToEdit={null}
       />
 
+      {/* Edit Client Modal */}
+      <AddEditClientModal
+        isOpen={editingClient !== null}
+        onClose={handleCloseEditModal}
+        onSave={handleUpdateClient}
+        clientToEdit={editingClient}
+      />
+
+      {/* View Client Modal */}
       <ViewClientModal
         client={selectedClient}
         onClose={handleCloseViewModal}
