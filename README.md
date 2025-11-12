@@ -1,16 +1,68 @@
-# React + Vite
+# 🧭 Client Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The Client Dashboard is a web-based application built using React, Vite, and Tailwind CSS that allows users to efficiently manage client information in an organized, modern, and responsive interface. The main goal of this project is to build a client management dashboard that demonstrates clean code organization, reusable React components, and modern web design principles.
 
-Currently, two official plugins are available:
+## 🚀 Features
+- ⚡ Fast development with Vite
+- 🎨 Styled using Tailwind CSS
+- 🧱 Modular React components
+- 🔍 Linting with ESLint
+- 🧩 Easy to extend and deploy
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🧰 Tech Stack
+- **React 19**
+- **Vite 7**
+- **Tailwind CSS 3**
+- **ESLint 9**
 
-## React Compiler
+## 🧑‍💻 Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Prerequisites
+Make sure you have:
+- Node.js ≥ 18
+- npm ≥ 9
 
-## Expanding the ESLint configuration
+### Installation
+```
+git clone https://github.com/ASyadav070/client-dashboard.git
+cd client-dashboard
+npm install
+``` 
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Run the App
+``` npm run dev ``` 
+
+Visit http://localhost:5173 in your browser.
+
+## 📂 Folder Structure
+```
+client-dashboard-main/
+├── .gitignore
+├── README.md
+├── eslint.config.js
+├── index.html
+├── package-lock.json
+├── package.json
+├── postcss.config.js
+├── src
+│   ├── App.jsx
+│   ├── components
+│   │   ├── AddClientModal.jsx
+│   │   ├── AddEditClientModal.jsx
+│   │   ├── ClientRow.jsx
+│   │   ├── ErrorMessage.jsx
+│   │   ├── Header.jsx
+│   │   ├── LoadingSpinner.jsx
+│   │   ├── ViewClientModal.jsx
+│   ├── constants.js
+│   ├── index.css
+│   ├── main.jsx
+├── tailwind.config.cjs
+├── vite.config.js
+```
+## 👥 Contributors
+
+This project was created as part of an internship collaboration by:
+👩‍💻 Rishika Paul
+👨‍💻 Ashvini Singh Yadav
+
