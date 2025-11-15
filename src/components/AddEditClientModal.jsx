@@ -75,17 +75,27 @@ const AddEditClientModal = ({ isOpen, onClose, onSave, clientToEdit = null }) =>
 
         try {
             if (isEditMode) {
-                // UPDATE existing client with PUT request
-                const response = await fetch(`${API_URL}/${clientToEdit.id}`, {
-                    method: 'PUT',
-                    body: JSON.stringify(clientData),
-                    headers: { 'Content-type': 'application/json; charset=UTF-8' },
-                });
+                // Check if this is a locally created client (ID > 10)
+                // JSONPlaceholder only has users 1-10, anything above is local-only
+                const isLocalClient = clientToEdit.id > 10;
+                
+                if (isLocalClient) {
+                    // For local clients, skip API call and update state directly
+                    // This prevents 500 errors from trying to update non-existent API resources
+                    onSave({ ...clientData, id: clientToEdit.id });
+                } else {
+                    // For existing API clients (ID 1-10), make PUT request
+                    const response = await fetch(`${API_URL}/${clientToEdit.id}`, {
+                        method: 'PUT',
+                        body: JSON.stringify(clientData),
+                        headers: { 'Content-type': 'application/json; charset=UTF-8' },
+                    });
 
-                if (!response.ok) throw new Error('Network response was not ok');
+                    if (!response.ok) throw new Error('Network response was not ok');
 
-                // Pass updated client data back to parent with the original ID
-                onSave({ ...clientData, id: clientToEdit.id });
+                    // Pass updated client data back to parent with the original ID
+                    onSave({ ...clientData, id: clientToEdit.id });
+                }
             } else {
                 // CREATE new client with POST request
                 const response = await fetch(API_URL, {
